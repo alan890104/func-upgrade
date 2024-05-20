@@ -1,5 +1,9 @@
 # UpgradePattern
 
+## Deployment Address (Testnet)
+
+[EQBZ-ZjtWeOpOTnLQM8hSIJfJc0OUUgc432TfN0NpCZS75AR](https://testnet.tonviewer.com/kQBZ-ZjtWeOpOTnLQM8hSIJfJc0OUUgc432TfN0NpCZS7yub)
+
 ## Project structure
 
 -   `contracts` - source code of all the smart contracts of the project and their dependencies.

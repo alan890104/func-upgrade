@@ -1,6 +1,6 @@
 import { Address, toNano } from '@ton/core';
 import { SimpleContract } from '../wrappers/SimpleContract';
-import { NetworkProvider, sleep } from '@ton/blueprint';
+import { NetworkProvider, compile, sleep } from '@ton/blueprint';
 
 export async function run(provider: NetworkProvider, args: string[]) {
     const ui = provider.ui();
@@ -16,12 +16,18 @@ export async function run(provider: NetworkProvider, args: string[]) {
 
     const counterBefore = await simpleContract.getCounter();
 
-    await simpleContract.sendIncrease(provider.sender(), {
-        increaseBy: args.length > 1 ? parseInt(args[1]) : Number(await ui.input('Increase by')),
+    await simpleContract.sendUpgrade(provider.sender(), {
+        code: await compile('SimpleContractV2'),
         value: toNano('0.05'),
     });
 
-    ui.write('Waiting for counter to increase...');
+    ui.write('Waiting for contract to upgrade...');
+
+    // Decrease counter
+    await simpleContract.sendDecrease(provider.sender(), {
+        decreaseBy: args.length > 1 ? parseInt(args[1]) : Number(await ui.input('Decrease by')),
+        value: toNano('0.05'),
+    });
 
     let counterAfter = await simpleContract.getCounter();
     let attempt = 1;
@@ -33,5 +39,5 @@ export async function run(provider: NetworkProvider, args: string[]) {
     }
 
     ui.clearActionPrompt();
-    ui.write('Counter increased successfully!');
+    ui.write('Counter decrease successfully!');
 }
